@@ -6,4 +6,5 @@ clusters:
         client_id: "myClient"
 
         pkcs12_file_url: "192.168.1.1/certs/mycert.pfx"
+        pkcs12_file_path: "/var/www/html/certs/mycert.pfx"
         pkcs12_passphrase: "pass"
