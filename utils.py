@@ -4,9 +4,10 @@ import yaml
 import json
 import sys
 import urllib3
+import ssl
 from datetime import datetime, timezone
 from cryptography.hazmat.primitives.serialization import pkcs12
-
+from cryptography import x509
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -21,8 +22,14 @@ def ImportYAML(configPath: str) -> dict:
     return config
 
 
-def TestSelfSignedCertificate() -> bool:
-    return True
+def TestSelfSignedCertificate(url: str) -> bool:
+    serverCert = ssl.get_server_certificate((url, 443))
+    x509obj = x509.load_pem_x509_certificate(bytes(serverCert, 'utf-8'))
+
+    if x509obj.issuer == x509obj.subject:
+        return True
+    else:
+        return False
 
 def TestCertificateExpiration(currentCert: requests.request, newCertData: dict, headers: dict) -> bool:
     
@@ -49,16 +56,13 @@ def TestCertificateExpiration(currentCert: requests.request, newCertData: dict, 
         print("There was an issue converting the file into a pkcs12 file")
         return False
 
-    timestamp = ActualCert.get_certificate().get_notAfter()
-
-    timestamp = bytes.decode(timestamp, "utf-8")
-
-    newCerTS = datetime.strptime(timestamp, '%Y%m%d%H%M%S%z')
-    curCertTS = datetime.strptime((currentCert.header["Expires"]), "%a, %d %b %Y %H:%M:%S %Z")
+    timestamp = ActualCert[1].not_valid_after
+    timestamp = timestamp.replace(tzinfo=timezone.utc)
+    curCertTS = datetime.strptime((currentCert.headers["Expires"]), "%a, %d %b %Y %H:%M:%S %Z")
     curCertTS = curCertTS.replace(tzinfo=timezone.utc)
 
 
-    CertTimeDelta = newCerTS - curCertTS
+    CertTimeDelta = timestamp - curCertTS
     CurrentTimeDelta = curCertTS - (datetime.now().astimezone(timezone.utc))
 
 
@@ -106,7 +110,7 @@ def UpdateServerCert(url: str, uuid: str, headers: dict, body: dict) -> bool:
         else:
             return True
     except:
-        print("There was an error updating the cert for UUID: %s",uuid)
+        print("There was an error updating the cert for UUID:",uuid)
         return False
 
 

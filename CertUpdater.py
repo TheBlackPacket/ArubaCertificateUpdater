@@ -32,7 +32,7 @@ if len(config["clusters"]) == 0:
 
 for cluster in config["clusters"].values():
 
-    print("Working on cluster: %s",(list(cluster.keys())[0]))
+    print("Working on cluster: ",cluster["baseURL"])
 
     Data = {
         "grant_type": "password",
@@ -55,7 +55,7 @@ for cluster in config["clusters"].values():
 
     if args.t == True:
         try:
-            response = requests.get(cluster["BaseURL"], headers=Header, data=Data, verify=False)
+            response = requests.get(cluster["baseURL"], verify=False)
 
             if utils.TestConnection(response) == False:
                 raise Exception
@@ -72,11 +72,11 @@ for cluster in config["clusters"].values():
     
 
 
-    access_token = utils.GetAuthToken(cluster["BaseURL"], Data, Header)
+    access_token = utils.GetAuthToken(cluster["baseURL"], Data, Header)
     Header["Authorization"] = "Bearer " + access_token
 
-    servers = utils.GetServers(cluster["BaseURL"], Header)
+    servers = utils.GetServers(cluster["baseURL"], Header)
 
     for server in servers["items"]:
         uuid = server["server_uuid"]
-        utils.UpdateServerCert(cluster["BaseURL"], uuid, Header, jsonCertLocation)
+        utils.UpdateServerCert(cluster["baseURL"], uuid=uuid, headers=Header, body=jsonCertLocation)
