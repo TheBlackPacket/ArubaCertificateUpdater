@@ -60,7 +60,7 @@ for cluster in config["clusters"].values():
             if utils.TestConnection(response) == False:
                 raise Exception
             else:
-                test = utils.TestCertificateExpiration(response, CertLocation, Header)
+                test = utils.TestCertificateExpiration(response, cluster["pkcs12_file_path"], cluster["pkcs12_passphrase"])
 
                 if test == True:
                     print("The certificate will be updated")

@@ -1,2 +1,12 @@
+certifi==2023.5.7
+cffi==1.15.1
+charset-normalizer==3.2.0
+cryptography==41.0.2
+docutils==0.20.1
+idna==3.4
+pycparser==2.21
+pyOpenSSL==23.2.0
 PyYAML==6.0.1
 requests==2.31.0
+six==1.16.0
+urllib3==2.0.4

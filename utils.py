@@ -31,27 +31,9 @@ def TestSelfSignedCertificate(url: str) -> bool:
     else:
         return False
 
-def TestCertificateExpiration(currentCert: requests.request, newCertData: dict, headers: dict) -> bool:
-    
+def TestCertificateExpiration(currentCert: requests.request, newCertPath: str, newCertPass: str,) -> bool:
     try:
-        NewCertificate = requests.get(newCertData["pkcs12_file_url"], headers=headers, verify=False)
-
-        if TestConnection(NewCertificate) == False:
-            raise Exception
-
-    except:
-        print("Error downloading PKCS12 file. Response: %s",NewCertificate.status_code)
-        sys.exit()
-        
-    chunks = []
-
-    for chunk in NewCertificate.iter_content(chunk_size=4096):
-        chunks.append(chunk)
-
-    RawCert = b''.join(chunks)
-
-    try:
-        ActualCert = pkcs12.load_key_and_certificates(RawCert, bytes(newCertData["pkcs12_passphrase"], "utf-8"))
+        ActualCert = pkcs12.load_key_and_certificates((open(newCertPath, 'rb').read()), bytes(newCertPass, "utf-8"))
     except:
         print("There was an issue converting the file into a pkcs12 file")
         return False
@@ -66,7 +48,7 @@ def TestCertificateExpiration(currentCert: requests.request, newCertData: dict, 
     CurrentTimeDelta = curCertTS - (datetime.now().astimezone(timezone.utc))
 
 
-    if CurrentTimeDelta.days >= 25 and CertTimeDelta.days <= 0:
+    if CurrentTimeDelta.days <= 30 and CertTimeDelta.days <= 0:
         return False
     else:
         return True
