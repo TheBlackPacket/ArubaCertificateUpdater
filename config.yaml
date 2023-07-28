@@ -1,6 +1,6 @@
 clusters:
     example.com:
-        baseURL: "https:/www.example.com"
+        baseURL: "https://www.example.com"
         username: "user"
         password: "pass"
         client_id: "myID"
