@@ -69,7 +69,7 @@ for cluster in config["clusters"].values():
                     if certificateTimeTest == False:
                         print("The current certificate is close to expiration")
                     else:
-                        print("The new certificate is not valid")
+                        print("The current certificate expires in more than 30 days")
             except:
                 print("Error getting certificate information from the cluster URL")
         
@@ -88,7 +88,7 @@ for cluster in config["clusters"].values():
                 print("Error checking if the cluster certificate is self-signed")
 
 
-        if certificateTimeTest == False and certificateSignTest == False:
+        if certificateTimeTest == True and certificateSignTest == False:
             next()
         else:
             print("Updating Certificate")
