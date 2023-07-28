@@ -46,7 +46,7 @@ def TestCertificateExpiration(currentCert: requests.request, newCertPath: str, n
     CurrentTimeDelta = curCertTS - timedelta(days=30)
 
 
-    if CurrentTimeDelta.days < datetime.now():
+    if CurrentTimeDelta > datetime.now():
         return False
     else:
         return True
