@@ -36,7 +36,6 @@ def TestCertificateExpiration(url: str) -> bool:
 
     return(CurrentTimeDelta < datetime.now())
 
-
 def GetAuthToken(url: str, body: json, header: json) -> str:
     try:
         response = requests.post((url + "/api/oauth"), data=body, verify=False, headers=header)
