@@ -6,11 +6,8 @@ import sys
 import urllib3
 import ssl
 from datetime import datetime, timezone, timedelta
-from cryptography.hazmat.primitives.serialization import pkcs12
-from cryptography import x509
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
 
 def ImportYAML(configPath: str) -> dict:
     config = []
@@ -30,21 +27,9 @@ def TestSelfSignedCertificate(url: str) -> bool:
     else:
         return False
 
-def TestCertificateExpiration(currentCert: requests.request, newCertPath: str, newCertPass: str,) -> bool:
-    try:
-        ActualCert = pkcs12.load_key_and_certificates((open(newCertPath, 'rb').read()), bytes(newCertPass, "utf-8"))
-    except:
-        print("There was an issue converting the file into a pkcs12 file")
-        return False
-
-    timestamp = ActualCert[1].not_valid_after
-    timestamp = timestamp.replace(tzinfo=timezone.utc)
+def TestCertificateExpiration(currentCert: requests.request) -> bool:
     curCertTS = datetime.strptime((currentCert.headers["Expires"]), "%a, %d %b %Y %H:%M:%S %Z")
-    curCertTS = curCertTS.replace(tzinfo=timezone.utc)
-
-    CertTimeDelta = timestamp - curCertTS
     CurrentTimeDelta = curCertTS - timedelta(days=30)
-
 
     if CurrentTimeDelta < datetime.now():
         return False
