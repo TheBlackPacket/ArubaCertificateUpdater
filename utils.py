@@ -28,11 +28,13 @@ def TestSelfSignedCertificate(url: str) -> bool:
     else:
         return False
 
-def TestCertificateExpiration(currentCert: requests.request) -> bool:
-    curCertTS = datetime.strptime((currentCert.headers["Expires"]), "%a, %d %b %Y %H:%M:%S %Z")
-    CurrentTimeDelta = curCertTS - timedelta(days=30)
+def TestCertificateExpiration(url: str) -> bool:
+    #curCertTS = datetime.strptime((currentCert.headers["Expires"]), "%a, %d %b %Y %H:%M:%S %Z")
+    serverCert = ssl.get_server_certificate((url.strip("https://"), 443))
+    x509obj = x509.load_pem_x509_certificate(bytes(serverCert, 'utf-8'))
+    CurrentTimeDelta = x509obj.not_valid_after - timedelta(days=30)
 
-    return(CurrentTimeDelta > datetime.now())
+    return(CurrentTimeDelta < datetime.now())
 
 
 def GetAuthToken(url: str, body: json, header: json) -> str:

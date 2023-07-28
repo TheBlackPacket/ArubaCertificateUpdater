@@ -64,7 +64,7 @@ for cluster in config["clusters"].values():
                 if utils.TestConnection(response) == False:
                     raise Exception
                 else:
-                    certificateTimeTest = utils.TestCertificateExpiration(response)
+                    certificateTimeTest = utils.TestCertificateExpiration(cluster["baseURL"])
 
                     if certificateTimeTest == True:
                         print("The current certificate is close to expiration")
