@@ -21,7 +21,6 @@ def ImportYAML(configPath: str) -> dict:
             print(exc)
     return config
 
-
 def TestSelfSignedCertificate(url: str) -> bool:
     serverCert = ssl.get_server_certificate((url, 443))
     x509obj = x509.load_pem_x509_certificate(bytes(serverCert, 'utf-8'))
@@ -67,8 +66,6 @@ def GetAuthToken(url: str, body: json, header: json) -> str:
         print("There was an issue getting the auth token. Please check the username and password in your config file")
         sys.exit()
 
-
-
 def GetServers(url: str, headers: dict) -> dict:
     try:
         response = requests.get((url + "/api/cluster/server"), headers=headers, verify=False)
@@ -78,7 +75,6 @@ def GetServers(url: str, headers: dict) -> dict:
             return (response.json())["_embedded"]
     except:
         print("Error getting servers from the cluster")
-
 
 def UpdateServerCert(url: str, uuid: str, headers: dict, body: dict) -> bool:
 
@@ -94,7 +90,6 @@ def UpdateServerCert(url: str, uuid: str, headers: dict, body: dict) -> bool:
     except:
         print("There was an error updating the cert for UUID:",uuid)
         return False
-
 
 def TestConnection(req: requests.Response) -> bool:
     if req.status_code == 200:

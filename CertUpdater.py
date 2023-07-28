@@ -18,7 +18,6 @@ parser = argparse.ArgumentParser(
 parser.add_argument('-config', type=str, help="The file location of the configuration YAML. Ex: -config='./config.yaml")
 parser.add_argument('-t', action='store_true', help="This will enable a function to verify weather the cluster's \
                     certificate is coming up on renewal, and that the target certificate is valid for replacement.")
-parser.add_argument('-s', type='store_true', help="This flag is to test if the cluster certificate is self signed.")
 
 args = parser.parse_args()
 
@@ -54,7 +53,7 @@ for cluster in config["clusters"].values():
     Data = json.dumps(Data)
     jsonCertLocation = json.dumps(CertLocation)
 
-    if args.t == True or args.c == True:
+    if args.t == True:
 
         response = requests.get(cluster["baseURL"], verify=False)
         certificateTimeTest = False
@@ -74,24 +73,25 @@ for cluster in config["clusters"].values():
             except:
                 print("Error getting certificate information from the cluster URL")
         
-            if args.c == True:
-                try:
-                    if utils.TestConnection(response) == False:
-                        raise Exception
-                    else:
-                        certificateSignTest = utils.TestSelfSignedCertificate(response)
+            try:
+                if utils.TestConnection(response) == False:
+                    raise Exception
+                else:
+                    certificateSignTest = utils.TestSelfSignedCertificate(response)
 
-                        if certificateSignTest == True:
-                            print("The certificate is self-signed")
-                        else:
-                            print("The certificate is not self-signed")
+                if certificateSignTest == True:
+                    print("The certificate is self-signed")
+                else:
+                    print("The certificate is not self-signed")
 
-                except:
-                    print("Error checking if the cluster certificate is self-signed")
+            except:
+                print("Error checking if the cluster certificate is self-signed")
 
 
-        if args.t == True and certificateTimeTest == False and certificateSignTest == False:
+        if certificateTimeTest == False and certificateSignTest == False:
             next()
+        else:
+            print("Updating Certificate")
 
 
     
