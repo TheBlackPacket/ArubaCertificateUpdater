@@ -5,7 +5,7 @@ import json
 import sys
 import urllib3
 import ssl
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from cryptography.hazmat.primitives.serialization import pkcs12
 from cryptography import x509
 
@@ -42,12 +42,11 @@ def TestCertificateExpiration(currentCert: requests.request, newCertPath: str, n
     curCertTS = datetime.strptime((currentCert.headers["Expires"]), "%a, %d %b %Y %H:%M:%S %Z")
     curCertTS = curCertTS.replace(tzinfo=timezone.utc)
 
-
     CertTimeDelta = timestamp - curCertTS
-    CurrentTimeDelta = curCertTS - (datetime.now().astimezone(timezone.utc))
+    CurrentTimeDelta = curCertTS - timedelta(days=30)
 
 
-    if CurrentTimeDelta.days <= 30:
+    if CurrentTimeDelta.days < datetime.now():
         return False
     else:
         return True
