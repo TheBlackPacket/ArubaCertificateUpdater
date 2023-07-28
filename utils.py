@@ -22,7 +22,7 @@ def ImportYAML(configPath: str) -> dict:
     return config
 
 def TestSelfSignedCertificate(url: str) -> bool:
-    serverCert = ssl.get_server_certificate((url, 443))
+    serverCert = ssl.get_server_certificate((url.strip("https://"), 443))
     x509obj = x509.load_pem_x509_certificate(bytes(serverCert, 'utf-8'))
 
     if x509obj.issuer == x509obj.subject:
@@ -51,8 +51,6 @@ def TestCertificateExpiration(currentCert: requests.request, newCertPath: str, n
         return False
     else:
         return True
-
-
 
 def GetAuthToken(url: str, body: json, header: json) -> str:
     try:
