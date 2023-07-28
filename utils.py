@@ -5,7 +5,8 @@ import json
 import sys
 import urllib3
 import ssl
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta
+from cryptography import x509
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -31,10 +32,8 @@ def TestCertificateExpiration(currentCert: requests.request) -> bool:
     curCertTS = datetime.strptime((currentCert.headers["Expires"]), "%a, %d %b %Y %H:%M:%S %Z")
     CurrentTimeDelta = curCertTS - timedelta(days=30)
 
-    if CurrentTimeDelta < datetime.now():
-        return False
-    else:
-        return True
+    return(CurrentTimeDelta > datetime.now())
+
 
 def GetAuthToken(url: str, body: json, header: json) -> str:
     try:

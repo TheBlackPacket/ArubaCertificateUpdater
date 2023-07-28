@@ -66,7 +66,7 @@ for cluster in config["clusters"].values():
                 else:
                     certificateTimeTest = utils.TestCertificateExpiration(response)
 
-                    if certificateTimeTest == False:
+                    if certificateTimeTest == True:
                         print("The current certificate is close to expiration")
                     else:
                         print("The current certificate expires in more than 30 days")
@@ -88,7 +88,7 @@ for cluster in config["clusters"].values():
                 print("Error checking if the cluster certificate is self-signed")
 
 
-        if certificateTimeTest == True and certificateSignTest == False:
+        if certificateTimeTest == False and certificateSignTest == False:
             if (len(config) > 1):
                 next()
             else:
