@@ -64,7 +64,7 @@ for cluster in config["clusters"].values():
                 if utils.TestConnection(response) == False:
                     raise Exception
                 else:
-                    certificateTimeTest = utils.TestCertificateExpiration(response, cluster["pkcs12_file_path"], cluster["pkcs12_passphrase"])
+                    certificateTimeTest = utils.TestCertificateExpiration(response)
 
                     if certificateTimeTest == False:
                         print("The current certificate is close to expiration")
