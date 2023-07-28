@@ -77,7 +77,7 @@ for cluster in config["clusters"].values():
                 if utils.TestConnection(response) == False:
                     raise Exception
                 else:
-                    certificateSignTest = utils.TestSelfSignedCertificate(response)
+                    certificateSignTest = utils.TestSelfSignedCertificate(cluster["baseURL"])
 
                 if certificateSignTest == True:
                     print("The certificate is self-signed")
