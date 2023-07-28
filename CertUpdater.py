@@ -66,7 +66,7 @@ for cluster in config["clusters"].values():
                 else:
                     certificateTimeTest = utils.TestCertificateExpiration(response, cluster["pkcs12_file_path"], cluster["pkcs12_passphrase"])
 
-                    if certificateTimeTest == True:
+                    if certificateTimeTest == False:
                         print("The current certificate is close to expiration")
                     else:
                         print("The new certificate is not valid")
