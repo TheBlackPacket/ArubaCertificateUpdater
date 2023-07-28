@@ -89,7 +89,11 @@ for cluster in config["clusters"].values():
 
 
         if certificateTimeTest == True and certificateSignTest == False:
-            next()
+            if (len(config) > 1):
+                next()
+            else:
+                print("No more servers in cluster. Exiting...")
+                sys.exit()
         else:
             print("Updating Certificate")
 
