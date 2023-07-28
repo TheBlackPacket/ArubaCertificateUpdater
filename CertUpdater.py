@@ -92,7 +92,7 @@ for cluster in config["clusters"].values():
             if (len(config) > 1):
                 next()
             else:
-                print("No more servers in cluster. Exiting...")
+                print("No more servers in cluster. Cert is up to date. Exiting...")
                 sys.exit()
         else:
             print("Updating Certificate")
