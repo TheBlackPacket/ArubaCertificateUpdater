@@ -98,9 +98,6 @@ for cluster in config["clusters"].values():
             print("Updating Certificate")
 
 
-    
-
-
     access_token = utils.GetAuthToken(cluster["baseURL"], Data, Header)
     Header["Authorization"] = "Bearer " + access_token
 
@@ -108,4 +105,8 @@ for cluster in config["clusters"].values():
 
     for server in servers["items"]:
         uuid = server["server_uuid"]
+        print("Working on server: %s..."%uuid, end="")
         utils.UpdateServerCert(cluster["baseURL"], uuid=uuid, headers=Header, body=jsonCertLocation)
+        print("complete.")
+    
+    print("Cluster complete.")
